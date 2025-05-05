@@ -1,0 +1,36 @@
+{
+  "name": "aetherion-chat-widget",
+  "version": "0.1.0",
+  "description": "A customizable chat widget for Next.js applications",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "chat",
+    "widget",
+    "nextjs",
+    "react",
+    "ui"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "next": "^13.0.0"
+  },
+  "dependencies": {
+    "framer-motion": "^10.12.16",
+    "lucide-react": "^0.279.0",
+    "react-markdown": "^8.0.7",
+    "remark-gfm": "^3.0.1",
+    "react-syntax-highlighter": "^15.5.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "@types/react-syntax-highlighter": "^15.5.7",
+    "typescript": "^5.1.6"
+  }
+} 
