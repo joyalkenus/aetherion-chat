@@ -17,20 +17,12 @@ A highly configurable, reusable chat widget component for Next.js applications w
 
 ## Installation
 
-### 1. Install the package from GitHub
-
 ```bash
+# Install the package
 npm install git+https://github.com/joyalkenus/aetherion-chat.git
-# or
-yarn add git+https://github.com/joyalkenus/aetherion-chat.git
-```
 
-### 2. Install Required Dependencies
-
-```bash
+# Install required dependencies
 npm install lucide-react framer-motion react-markdown remark-gfm react-syntax-highlighter
-# or
-yarn add lucide-react framer-motion react-markdown remark-gfm react-syntax-highlighter
 ```
 
 ## Next.js Integration Guide
@@ -268,38 +260,14 @@ And in your component:
 const apiUrl = process.env.NEXT_PUBLIC_CHAT_API_URL;
 ```
 
-## Basic Usage
+## Configuration Options
 
-### Quick Start
-
-```tsx
-import { FuturisticChatWidget } from 'aetherion-chat-widget';
-
-export default function App() {
-  return <FuturisticChatWidget />;
-}
-```
-
-### With Sample Mode (Testing)
+### Sample Mode (Testing)
 
 ```tsx
+// Enable sample mode to test with pre-defined responses
 <FuturisticChatWidget sampleMode={true} />
 ```
-
-### With Custom API
-
-```tsx
-<FuturisticChatWidget
-  config={{
-    api: {
-      endpoint: '/api/chat',
-      headers: { Authorization: 'Bearer token' }
-    }
-  }}
-/>
-```
-
-## Advanced Configuration
 
 ### Theme Customization
 
@@ -351,60 +319,6 @@ export default function App() {
     }
   }}
 />
-```
-
-## Complete Configuration Example
-
-```tsx
-import { FuturisticChatWidget, ChatWidgetConfig } from 'aetherion-chat-widget';
-
-const config: ChatWidgetConfig = {
-  theme: {
-    primary: 'indigo',
-    secondary: 'violet',
-    background: 'slate',
-    textColor: 'white'
-  },
-  messages: {
-    placeholder: 'How can I help you today?',
-    userName: 'User',
-    assistantName: 'AI Helper'
-  },
-  animation: {
-    duration: 0.25,
-    bounce: 1.1
-  },
-  api: {
-    endpoint: '/api/chat',
-    headers: {
-      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_KEY}`,
-      'Content-Type': 'application/json'
-    }
-  },
-  position: 'bottom-right'
-};
-
-export default function App() {
-  const handleMessage = async (message: string) => {
-    // Custom message handling logic
-    console.log('Message sent:', message);
-  };
-
-  return (
-    <FuturisticChatWidget
-      config={config}
-      onSendMessage={handleMessage}
-      initialMessages={[
-        {
-          id: '1',
-          content: 'Hello! How can I assist you today?',
-          type: 'assistant',
-          timestamp: new Date()
-        }
-      ]}
-    />
-  );
-}
 ```
 
 ## API Integration
@@ -489,65 +403,6 @@ interface ChatWidgetConfig {
 }
 ```
 
-## Extending the Component
-
-### Adding Custom Components
-
-```typescript
-// Extend the markdown renderer
-const customComponents = {
-  h1: ({ children }) => <h1 className="text-3xl font-bold">{children}</h1>,
-  // Add more custom components
-};
-
-// Pass to ReactMarkdown
-<ReactMarkdown components={customComponents}>
-  {content}
-</ReactMarkdown>
-```
-
-### Custom Styling
-
-```tsx
-<FuturisticChatWidget
-  className="custom-chat-widget"
-  config={{
-    theme: {
-      primary: 'custom-color',
-      // Use custom Tailwind classes
-    }
-  }}
-/>
-```
-
-## Tailwind CSS Configuration
-
-If you're using Tailwind CSS, ensure these values are in your `tailwind.config.js`:
-
-```javascript
-module.exports = {
-  content: [
-    // ... your content paths
-  ],
-  theme: {
-    extend: {
-      colors: {
-        // Ensure your theme colors are available
-      },
-      animation: {
-        bounce: 'bounce 1s infinite',
-      },
-      keyframes: {
-        bounce: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-25%)' },
-        },
-      },
-    },
-  },
-}
-```
-
 ## Examples
 
 You can find example implementations in the `/examples` directory:
@@ -556,10 +411,6 @@ You can find example implementations in the `/examples` directory:
 - [`CustomThemeExample.tsx`](./examples/CustomThemeExample.tsx) - Customizing colors and position
 - [`ApiIntegrationExample.tsx`](./examples/ApiIntegrationExample.tsx) - Connecting to an API
 - [`FullCustomExample.tsx`](./examples/FullCustomExample.tsx) - Full configuration with custom handler
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
