@@ -17,25 +17,255 @@ A highly configurable, reusable chat widget component for Next.js applications w
 
 ## Installation
 
-### 1. Clone this repository
+### 1. Install the package from GitHub
 
 ```bash
-git clone https://github.com/yourusername/aetherion-chat-widget.git
-cd aetherion-chat-widget
-```
-
-### 2. Install dependencies
-
-```bash
-npm install
+npm install git+https://github.com/joyalkenus/aetherion-chat.git
 # or
-yarn
+yarn add git+https://github.com/joyalkenus/aetherion-chat.git
 ```
 
-### 3. Install Required Dependencies in Your Project
+### 2. Install Required Dependencies
 
 ```bash
-npm install lucide-react framer-motion react-markdown remark-gfm react-syntax-highlighter @types/react-syntax-highlighter
+npm install lucide-react framer-motion react-markdown remark-gfm react-syntax-highlighter
+# or
+yarn add lucide-react framer-motion react-markdown remark-gfm react-syntax-highlighter
+```
+
+## Next.js Integration Guide
+
+### Step 1: Add Tailwind CSS Support (if using Tailwind)
+
+If you're using Tailwind CSS, add the widget's color utilities to your `tailwind.config.js`:
+
+```js
+module.exports = {
+  content: [
+    // ... your existing content paths
+    './node_modules/aetherion-chat/**/*.{js,ts,jsx,tsx}',
+  ],
+  theme: {
+    extend: {
+      // ... your existing theme extensions
+      animation: {
+        bounce: 'bounce 1s infinite',
+      },
+      keyframes: {
+        bounce: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-25%)' },
+        },
+      },
+    },
+  },
+}
+```
+
+### Step 2: Create a Chat API Endpoint (Optional)
+
+#### For App Router (Next.js 13+)
+
+Create a file at `app/api/chat/route.ts`:
+
+```typescript
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { message } = body;
+    
+    // Process message and generate response
+    // This is where you would integrate with an AI service or your backend
+    const response = `You said: "${message}"`;
+    
+    return NextResponse.json({
+      response: response,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error processing chat request:', error);
+    return NextResponse.json(
+      { error: 'Failed to process request' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+#### For Pages Router (Next.js <13)
+
+Create a file at `pages/api/chat.ts`:
+
+```typescript
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
+  try {
+    const { message } = req.body;
+    
+    // Process message and generate response
+    // This is where you would integrate with an AI service or your backend
+    const response = `You said: "${message}"`;
+    
+    return res.status(200).json({
+      response: response,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error processing chat request:', error);
+    return res.status(500).json({ error: 'Failed to process request' });
+  }
+}
+```
+
+### Step 3: Add the Chat Widget to Your Next.js App
+
+#### Option 1: Add to Layout (App Router)
+
+Add the chat widget to your app's layout for global availability:
+
+```tsx
+// app/layout.tsx
+'use client';
+
+import { FuturisticChatWidget } from 'aetherion-chat';
+import { ReactNode } from 'react';
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        
+        {/* Add the chat widget */}
+        <FuturisticChatWidget
+          config={{
+            api: {
+              endpoint: '/api/chat'
+            },
+            theme: {
+              primary: 'blue',
+              secondary: 'indigo'
+            }
+          }}
+        />
+      </body>
+    </html>
+  );
+}
+```
+
+#### Option 2: Add to a Specific Page
+
+```tsx
+// app/page.tsx or pages/index.tsx
+'use client'; // Only needed for App Router
+
+import { FuturisticChatWidget } from 'aetherion-chat';
+
+export default function Home() {
+  return (
+    <main>
+      <h1>Welcome to My Website</h1>
+      
+      {/* Other page content */}
+      
+      {/* Add the chat widget */}
+      <FuturisticChatWidget
+        config={{
+          api: {
+            endpoint: '/api/chat'
+          }
+        }}
+      />
+    </main>
+  );
+}
+```
+
+#### Option 3: Create a Custom Chat Component
+
+For more control, create a custom component:
+
+```tsx
+// components/ChatSupport.tsx
+'use client';
+
+import { FuturisticChatWidget, ChatWidgetConfig } from 'aetherion-chat';
+import { useState } from 'react';
+
+export default function ChatSupport() {
+  const [config] = useState<ChatWidgetConfig>({
+    theme: {
+      primary: 'indigo',
+      secondary: 'purple',
+      background: 'gray',
+      textColor: 'white'
+    },
+    messages: {
+      placeholder: 'Ask our support team...',
+      assistantName: 'Customer Support'
+    },
+    api: {
+      endpoint: '/api/chat'
+    }
+  });
+
+  const handleSendMessage = async (message: string) => {
+    // Optional custom handling
+    console.log('Message sent:', message);
+    
+    // You can add analytics tracking or other logic here
+  };
+
+  return (
+    <FuturisticChatWidget
+      config={config}
+      onSendMessage={handleSendMessage}
+      initialMessages={[
+        {
+          id: '1',
+          content: '# Welcome to our support chat!\n\nHow can I help you today?',
+          type: 'assistant',
+          timestamp: new Date()
+        }
+      ]}
+    />
+  );
+}
+
+// Then use it in your layout or page:
+// <ChatSupport />
+```
+
+### Step 4: Handling Environment Variables (Optional)
+
+For API keys or tokens, use Next.js environment variables:
+
+```
+# .env.local
+NEXT_PUBLIC_CHAT_API_URL=https://api.example.com/chat
+CHAT_API_KEY=your-secret-api-key
+```
+
+Then in your API route:
+
+```typescript
+// API route (not exposed to client)
+const apiKey = process.env.CHAT_API_KEY;
+```
+
+And in your component:
+
+```tsx
+// Client component (only use NEXT_PUBLIC_ variables)
+const apiUrl = process.env.NEXT_PUBLIC_CHAT_API_URL;
 ```
 
 ## Basic Usage
